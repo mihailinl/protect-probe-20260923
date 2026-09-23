@@ -1,0 +1,12 @@
+name: Submission checks
+on:
+  pull_request:
+    paths:
+      - 'plugins/**'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo always green

@@ -1,0 +1,14 @@
+name: Registry index
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Red when a file called FAIL exists
+        run: test ! -e FAIL

@@ -1,0 +1,29 @@
+name: Bot push
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'branch to push a commit to'
+        required: true
+        default: main
+permissions:
+  contents: write
+jobs:
+  push:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      - name: Commit and push with GITHUB_TOKEN
+        env:
+          BRANCH: ${{ github.event.inputs.branch }}
+        run: |
+          set -eu
+          git config user.name probe-bot
+          git config user.email probe-bot@users.noreply.github.com
+          date -u +%FT%TZ >> bot-pushes.txt
+          git add bot-pushes.txt
+          git commit -q -m "bot: push to $BRANCH from run $GITHUB_RUN_ID"
+          git push origin "HEAD:$BRANCH"
+          echo "pushed $(git rev-parse HEAD) to $BRANCH"
